@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prepare": "husky install",
     "build": "npm run build:clean && npm run build:tsc && npm run build:di",
     "build:clean": "rm -r dist; exit 0",
     "build:di": "find ./src -type f \\( -name '*.json' -o -name '*.yml' -o -name '*.yaml' -o -name '*.html' -o -name '*.png' -o -name '*.env' \\) -exec rsync --relative {} dist/ \\;",
@@ -23,13 +24,30 @@
     "test:unit:watch": "jest --watch --detectOpenHandles --forceExit",
     "test:merge:coverage": "lcov-result-merger 'coverage/**/*.info' 'coverage/merged.info'"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commit-message-validator"
+    }
+  },
+  "lint-staged": {
+    "{src,tests}/**/*.ts": [
+      "prettier --write",
+      "npm run lint:fix"
+    ]
+  },
+  "config": {
+    "commit-message-validator": {
+      "pattern": "^\\[GH-[\\d]+\\]\\s.*$",
+      "errorMessage": "Invalid commit message. Valid example: [GH-123] feat(api): add new feature"
+    }
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "env-var": "^7.5.0",
     "errorhandler": "^1.5.1",
