@@ -1,0 +1,5 @@
+services:
+  # HEALTH
+  Apps.pecera.controllers.health.GetStatusController:
+    class: ../../controllers/health/GetStatusController
+    arguments: []
