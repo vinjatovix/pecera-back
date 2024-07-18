@@ -1,11 +1,39 @@
 {
   "name": "pecera-back",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "docker:mongo": "docker-compose -f ./docker/docker-compose.yml up --build -d"
+    "prepare": "husky install",
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "build": "npm run build:clean && npm run build:tsc && npm run build:di",
+    "build:clean": "rm -r dist; exit 0",
+    "build:di": "find ./src -type f \\( -name '*.json' -o -name '*.yml' -o -name '*.yaml' -o -name '*.html' -o -name '*.png' -o -name '*.env' \\) -exec rsync --relative {} dist/ \\;",
+    "build:tsc": "tsc -p tsconfig.prod.json --sourceMap false",
+    "check-dependencies": "madge --circular ./src",
+    "dev": "ts-node-dev --ignore-watch node_modules ./src/apps/pecera/start.ts",
+    "docker:mongo": "docker-compose -f ./docker/docker-compose.yml up --build -d",
+    "lint": "eslint . --ext .ts --max-warnings=0",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "pre-commit": "lint-staged"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commit-message-validator"
+    }
+  },
+  "lint-staged": {
+    "{src,tests}/**/*.ts": [
+      "prettier --write",
+      "npm run lint:fix"
+    ]
+  },
+  "config": {
+    "commit-message-validator": {
+      "pattern": "^\\[GH-[\\d]+\\]\\s.*$",
+      "errorMessage": "Invalid commit message. Valid example: [GH-123] feat(api): add new feature"
+    }
   },
   "author": "",
   "license": "ISC",
