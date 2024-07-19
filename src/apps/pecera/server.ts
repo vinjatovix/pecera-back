@@ -69,7 +69,9 @@ export class Server {
       if (this.httpServer) {
         this.httpServer.close((error) => {
           if (error) {
-            reject(error);
+            const message: string =
+              error?.message || 'Error stopping the server';
+            reject(new Error(message));
             return;
           }
           resolve();

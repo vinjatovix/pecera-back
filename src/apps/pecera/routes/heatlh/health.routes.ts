@@ -1,15 +1,15 @@
 import { Request, Response, Router } from 'express';
-// import { GetStatusController } from '../../controllers/health/GetStatusController';
-// import container from '../../dependency-injection';
+
+import container from '../../dependency-injection';
+import { GetStatusController } from '../../controllers/health/GetStatusController';
 
 const prefix = '/api/v1/health';
 
 export const register = (router: Router) => {
-  // const controller: GetStatusController = container.get(
-  //   'Apps.apiApp.controllers.health.GetStatusController'
-  // );
+  const controller: GetStatusController = container.get(
+    'Apps.pecera.controllers.health.GetStatusController'
+  );
   router.get(`${prefix}/http`, (req: Request, res: Response) => {
-    // controller.run(req, res);
-    res.status(200).send('OK');
+    controller.run(req, res);
   });
 };

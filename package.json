@@ -52,7 +52,7 @@
     "http-status": "^1.7.4",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
-    "node-dependency-injection": "^3.1.2",
+    "node-dependency-injection": "^2.7.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3",
     "winston": "^3.13.1",
