@@ -1,0 +1,24 @@
+import { envs } from '../../config/envs.plugin';
+import { Server } from './server';
+
+export class Pecera {
+  server?: Server;
+  host?: string;
+
+  async start() {
+    const host: string = envs.HOST;
+    const port: number = envs.PORT;
+    this.host = host;
+    this.server = new Server(host, port);
+
+    return this.server.listen();
+  }
+
+  async stop() {
+    return this.server?.stop();
+  }
+
+  get httpServer() {
+    return this.server?.getHTTPServer();
+  }
+}
