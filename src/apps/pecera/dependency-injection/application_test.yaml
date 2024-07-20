@@ -1,2 +1,7 @@
 imports:
   - { resource: ./application.yaml }
+
+services:
+  pecera.EnvironmentArranger:
+    class: ../../../../tests/Contexts/shared/infrastructure/mongo/MongoEnvironmentArranger
+    arguments: ['@pecera.MongoClient']

@@ -1,4 +1,15 @@
 services:
+  pecera.MongoConfig:
+    factory:
+      class: ../../../../Contexts/shared/infrastructure/persistence/mongo/MongoConfigFactory
+      method: 'createConfig'
+
+  pecera.MongoClient:
+    factory:
+      class: ../../../../Contexts/shared/infrastructure/persistence/mongo/MongoClientFactory
+      method: 'createClient'
+    arguments: ['pecera', '@pecera.MongoConfig']
+
   # HEALTH
   Apps.pecera.controllers.health.GetStatusController:
     class: ../../controllers/health/GetStatusController

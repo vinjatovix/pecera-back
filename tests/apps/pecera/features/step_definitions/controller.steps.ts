@@ -3,6 +3,12 @@ import chai, { assert } from 'chai';
 import request from 'supertest';
 
 import { Pecera } from '../../../../../src/apps/pecera/Pecera';
+import container from '../../../../../src/apps/pecera/dependency-injection';
+import { EnvironmentArranger } from '../../../../Contexts/shared/infrastructure/arranger/EnvironmentArranger';
+
+const environmentArranger: Promise<EnvironmentArranger> = container.get(
+  'pecera.EnvironmentArranger'
+);
 
 const expect = chai.expect;
 let _request: request.Test;
@@ -37,9 +43,12 @@ const compareResponseObject = <T>(
 BeforeAll(async () => {
   app = new Pecera();
   await app.start();
+  await (await environmentArranger).arrange();
 });
 
 AfterAll(async () => {
+  await (await environmentArranger).arrange();
+  await (await environmentArranger).close();
   await app.stop();
 });
 
