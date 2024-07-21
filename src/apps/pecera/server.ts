@@ -8,12 +8,15 @@ import httpStatus from 'http-status';
 import cors from 'cors';
 import { registerRoutes } from './routes';
 import { envs } from '../../config/envs.plugin';
+import { buildLogger } from '../../Contexts/shared/plugins';
 
 const corsOptions = {
   origin: envs.ALLOWED_ORIGINS?.split(',') ?? [],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true
 };
+
+const logger = buildLogger('pecera-server');
 
 export class Server {
   private express: express.Express;
@@ -54,7 +57,7 @@ export class Server {
           ? `${this.host}:${this.port}`
           : this.host;
         const message: string = `Backend App is running at ${host} in ${env} mode`;
-        console.log(message);
+        logger.info(message);
         resolve();
       });
     });
