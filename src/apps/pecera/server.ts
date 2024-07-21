@@ -1,14 +1,14 @@
 import bodyParser from 'body-parser';
 import errorHandler from 'errorhandler';
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import Router from 'express-promise-router';
 import helmet from 'helmet';
 import * as http from 'http';
-import httpStatus from 'http-status';
 import cors from 'cors';
 import { registerRoutes } from './routes';
 import { envs } from '../../config/envs.plugin';
 import { buildLogger } from '../../Contexts/shared/plugins';
+import { apiErrorHandler } from './routes/shared';
 
 const corsOptions = {
   origin: envs.ALLOWED_ORIGINS?.split(',') ?? [],
@@ -41,12 +41,7 @@ export class Server {
 
     registerRoutes(router);
 
-    router.use(
-      (err: Error, _req: Request, res: Response, _next: NextFunction): void => {
-        console.log(err);
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err.message);
-      }
-    );
+    router.use(apiErrorHandler);
   }
 
   async listen(): Promise<void> {
