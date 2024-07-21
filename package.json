@@ -16,6 +16,8 @@
     "start": "node ./dist/src/apps/pecera/start.js",
     "start:local": "npm run build && node ./dist/src/apps/pecera/start.js",
     "pre-commit": "lint-staged",
+    "restoreDB": "./docker/mongo/scripts/restoreDB.sh",
+    "restoreDump": "./docker/mongo/scripts/restoreDump.sh",
     "test": "npm run build && npm run test:clean:coverage && npm run test:unit && npm run test:features && npm run test:merge:coverage",
     "test:clean:coverage": "rm -rf coverage && rm -rf .nyc_output",
     "test:features": "nyc --report-dir=coverage/cucumber --reporter=lcov cucumber-js -p pecera",
