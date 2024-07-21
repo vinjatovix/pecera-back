@@ -14,3 +14,16 @@ services:
   Apps.pecera.controllers.health.GetStatusController:
     class: ../../controllers/health/GetStatusController
     arguments: []
+
+  # AUTH
+  Apps.pecera.controllers.Auth.LoginController:
+    class: ../../controllers/Auth/LoginController
+    arguments: ['@pecera.Auth.application.LoginUser']
+
+  Apps.pecera.controllers.Auth.RegisterController:
+    class: ../../controllers/Auth/RegisterController
+    arguments: ['@pecera.Auth.application.RegisterUser']
+
+  Apps.pecera.controllers.Auth.ValidateMailController:
+    class: ../../controllers/Auth/ValidateMailController
+    arguments: ['@pecera.Auth.application.ValidateMail']
