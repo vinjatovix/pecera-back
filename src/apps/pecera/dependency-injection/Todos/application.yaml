@@ -1,0 +1,39 @@
+services:
+  pecera.MongoConfig:
+    factory:
+      class: ../../../../Contexts/shared/infrastructure/persistence/mongo/MongoConfigFactory
+      method: 'createConfig'
+
+  pecera.MongoClient:
+    factory:
+      class: ../../../../Contexts/shared/infrastructure/persistence/mongo/MongoClientFactory
+      method: 'createClient'
+    arguments: ['pecera', '@pecera.MongoConfig']
+
+  pecera.Todos.application.TodoCreator:
+    class: ../../../../Contexts/pecera/Todos/application/TodoCreator
+    arguments:
+      [
+        '@pecera.Todos.domain.TodoRepository',
+        '@pecera.Auth.domain.AuthRepository'
+      ]
+
+  pecera.Todos.application.TodoPatcher:
+    class: ../../../../Contexts/pecera/Todos/application/TodoPatcher
+    arguments: ['@pecera.Todos.domain.TodoRepository']
+
+  pecera.Todos.application.TodoFinder:
+    class: ../../../../Contexts/pecera/Todos/application/TodoFinder
+    arguments: ['@pecera.Todos.domain.TodoRepository']
+
+  pecera.Todos.application.AllTodosFinder:
+    class: ../../../../Contexts/pecera/Todos/application/AllTodosFinder
+    arguments: ['@pecera.Todos.domain.TodoRepository']
+
+  pecera.Todos.application.TodoRemover:
+    class: ../../../../Contexts/pecera/Todos/application/TodoRemover
+    arguments: ['@pecera.Todos.domain.TodoRepository']
+
+  pecera.Todos.domain.TodoRepository:
+    class: ../../../../Contexts/pecera/Todos/infrastructure/persistence/MongoTodoRepository
+    arguments: ['@pecera.MongoClient']
