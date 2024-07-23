@@ -5,6 +5,7 @@ import container from '../../dependency-injection';
 import { validateBody, validateReqSchema } from '../shared';
 import {
   LoginController,
+  RefreshTokenController,
   RegisterController,
   ValidateMailController
 } from '../../controllers/Auth';
@@ -13,6 +14,7 @@ import {
   registerReqSchema,
   validateMailReqSchema
 } from './validationSchemas';
+import { auth } from '../shared/auth';
 
 const prefix = '/api/v1/Auth';
 
@@ -27,6 +29,10 @@ export const register = (router: Router) => {
 
   const validateMailController: ValidateMailController = container.get(
     'Apps.pecera.controllers.Auth.ValidateMailController'
+  );
+
+  const refreshTokenController: RefreshTokenController = container.get(
+    'Apps.pecera.controllers.Auth.RefreshTokenController'
   );
 
   router.post(
@@ -55,6 +61,14 @@ export const register = (router: Router) => {
     validateReqSchema,
     (req: Request, res: Response, next: NextFunction) => {
       validateMailController.run(req, res, next);
+    }
+  );
+
+  router.get(
+    `${prefix}/refreshToken`,
+    auth,
+    (req: Request, res: Response, next: NextFunction) => {
+      refreshTokenController.run(req, res, next);
     }
   );
 };

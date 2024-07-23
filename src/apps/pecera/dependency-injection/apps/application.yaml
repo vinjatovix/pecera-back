@@ -27,3 +27,7 @@ services:
   Apps.pecera.controllers.Auth.ValidateMailController:
     class: ../../controllers/Auth/ValidateMailController
     arguments: ['@pecera.Auth.application.ValidateMail']
+
+  Apps.pecera.controllers.Auth.RefreshTokenController:
+    class: ../../controllers/Auth/RefreshTokenController
+    arguments: ['@pecera.Auth.application.RefreshToken']

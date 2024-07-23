@@ -45,6 +45,6 @@ export class CryptAdapter implements EncrypterTool {
     const now = Math.floor(Date.now() / 1000);
     const { exp, ...payload } = decoded as { exp: number; iat: number };
 
-    return exp > now ? this.generateToken(payload) : null;
+    return exp > now ? this.generateToken({ ...payload, iat: now }) : null;
   }
 }
