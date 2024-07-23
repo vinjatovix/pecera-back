@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import { Nullable } from '../../../../shared/domain/Nullable';
 import { MongoRepository } from '../../../../shared/infrastructure/persistence/mongo/MongoRepository';
 import { User, UserRepository, Username } from '../../domain';
@@ -38,6 +38,25 @@ export class MongoAuthRepository
   async search(email: string): Promise<Nullable<User>> {
     const collection = await this.collection();
     const document = await collection.findOne<AuthDocument>({ email });
+
+    return document
+      ? User.fromPrimitives({
+          id: document._id,
+          email: document.email,
+          username: document.username,
+          password: document.password,
+          emailValidated: document.emailValidated,
+          roles: document.roles,
+          metadata: document.metadata
+        })
+      : null;
+  }
+
+  async findById(id: string): Promise<Nullable<User>> {
+    const collection = await this.collection();
+    const document = await collection.findOne<AuthDocument>({
+      _id: id as unknown as ObjectId
+    });
 
     return document
       ? User.fromPrimitives({

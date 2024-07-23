@@ -6,7 +6,8 @@ import {
 import { Nullable } from '../../../../../src/Contexts/shared/domain/Nullable';
 import {
   Email,
-  StringValueObject
+  StringValueObject,
+  Uuid
 } from '../../../../../src/Contexts/shared/domain/value-object';
 
 import { UserMother } from '../domain/mothers/UserMother';
@@ -14,21 +15,30 @@ import { UserMother } from '../domain/mothers/UserMother';
 export class UserRepositoryMock implements UserRepository {
   private saveMock: jest.Mock;
   private updateMock: jest.Mock;
-  private findMock: jest.Mock;
+  private searchMock: jest.Mock;
+  private findByIdMock: jest.Mock;
   private password: StringValueObject = new StringValueObject(
     '$2a$12$mZgfH4D7z4dZcZHDKyogqOOnEWS6XHLdczPJktzD88djpvlr3Bq1C'
   );
 
   constructor({ exists }: { exists: boolean }) {
     if (exists) {
-      this.findMock = jest.fn().mockImplementation((email: string) => {
+      this.searchMock = jest.fn().mockImplementation((email: string) => {
         return UserMother.create({
           email: new Email(email),
           password: this.password
         });
       });
+
+      this.findByIdMock = jest.fn().mockImplementation((id: string) => {
+        return UserMother.create({
+          password: this.password,
+          id: new Uuid(id)
+        });
+      });
     } else {
-      this.findMock = jest.fn().mockReturnValue(null);
+      this.searchMock = jest.fn().mockReturnValue(null);
+      this.findByIdMock = jest.fn().mockReturnValue(null);
     }
     this.saveMock = jest.fn();
     this.updateMock = jest.fn();
@@ -51,10 +61,18 @@ export class UserRepositoryMock implements UserRepository {
   }
 
   async search(email: string): Promise<Nullable<User>> {
-    return this.findMock(email);
+    return this.searchMock(email);
   }
 
   assertSearchHasBeenCalledWith(expected: string): void {
-    expect(this.findMock).toHaveBeenCalledWith(expected);
+    expect(this.searchMock).toHaveBeenCalledWith(expected);
+  }
+
+  async findById(id: string): Promise<Nullable<User>> {
+    return this.findByIdMock(id);
+  }
+
+  assertFindByIdHasBeenCalledWith(expected: string): void {
+    expect(this.searchMock).toHaveBeenCalledWith(expected);
   }
 }
