@@ -34,4 +34,7 @@ export class CreateTodoRepositoryMock implements TodoRepository {
   remove(_todoId: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
+  findByUserId(_userId: string): Promise<Todo[]> {
+    throw new Error('Method not implemented.');
+  }
 }

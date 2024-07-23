@@ -7,6 +7,7 @@ export class TodoRepositoryMock implements TodoRepository {
   private saveMock: jest.Mock;
   private findMock: jest.Mock;
   private findAllMock: jest.Mock;
+  private findByUserIdMock: jest.Mock;
   private removeMock: jest.Mock;
   private userId: string;
 
@@ -14,6 +15,7 @@ export class TodoRepositoryMock implements TodoRepository {
     this.saveMock = jest.fn();
     this.findMock = jest.fn();
     this.findAllMock = jest.fn();
+    this.findByUserIdMock = jest.fn();
     this.removeMock = jest.fn();
     this.userId = userId;
   }
@@ -45,6 +47,20 @@ export class TodoRepositoryMock implements TodoRepository {
 
   assertSearchHasBeenCalledWith(expected: string): void {
     expect(this.findMock).toHaveBeenCalledWith(expected);
+  }
+
+  async findByUserId(userId: string): Promise<Todo[]> {
+    this.findByUserIdMock = jest.fn().mockReturnValue([
+      TodoMother.create({
+        user: new Uuid(userId)
+      })
+    ]);
+
+    return this.findByUserIdMock(userId);
+  }
+
+  assertFindByUserIdHasBeenCalledWith(expected: string): void {
+    expect(this.findByUserIdMock).toHaveBeenCalledWith(expected);
   }
 
   async findAll(): Promise<Todo[]> {
