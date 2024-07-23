@@ -1,10 +1,12 @@
 import { Todo } from '../../../../../src/Contexts/pecera/Todos/domain/Todo';
+import { TodoPatch } from '../../../../../src/Contexts/pecera/Todos/domain/TodoPatch';
 import { TodoRepository } from '../../../../../src/Contexts/pecera/Todos/domain/TodoRepository';
 import { Uuid } from '../../../../../src/Contexts/shared/domain/value-object';
 import { TodoMother } from '../domain/TodoMother';
 
 export class TodoRepositoryMock implements TodoRepository {
   private saveMock: jest.Mock;
+  private updateMock: jest.Mock;
   private findMock: jest.Mock;
   private findAllMock: jest.Mock;
   private findByUserIdMock: jest.Mock;
@@ -13,6 +15,7 @@ export class TodoRepositoryMock implements TodoRepository {
 
   constructor({ userId }: { userId: string }) {
     this.saveMock = jest.fn();
+    this.updateMock = jest.fn();
     this.findMock = jest.fn();
     this.findAllMock = jest.fn();
     this.findByUserIdMock = jest.fn();
@@ -26,6 +29,14 @@ export class TodoRepositoryMock implements TodoRepository {
 
   assertSaveHasBeenCalledWith(expected: Todo): void {
     expect(this.saveMock).toHaveBeenCalledWith(expected);
+  }
+
+  async update(book: TodoPatch): Promise<void> {
+    this.updateMock(book);
+  }
+
+  assertUpdateHasBeenCalledWith(expected: TodoPatch): void {
+    expect(this.updateMock).toHaveBeenCalledWith(expected);
   }
 
   async search(id: string): Promise<Todo | null> {

@@ -1,5 +1,8 @@
-import { Todo } from '../../../../../src/Contexts/pecera/Todos/domain/Todo';
-import { TodoRepository } from '../../../../../src/Contexts/pecera/Todos/domain/TodoRepository';
+import {
+  TodoRepository,
+  Todo,
+  TodoPatch
+} from '../../../../../src/Contexts/pecera/Todos/domain';
 
 export class CreateTodoRepositoryMock implements TodoRepository {
   private saveMock: jest.Mock;
@@ -30,6 +33,9 @@ export class CreateTodoRepositoryMock implements TodoRepository {
 
   findAll(): Promise<Todo[]> {
     throw new Error('Method not implemented.');
+  }
+  async update(_book: TodoPatch): Promise<void> {
+    return;
   }
   remove(_todoId: string): Promise<void> {
     throw new Error('Method not implemented.');

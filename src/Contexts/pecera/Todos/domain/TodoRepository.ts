@@ -1,7 +1,10 @@
 import { Todo } from './Todo';
+import { TodoPatch } from './TodoPatch';
 
 export interface TodoRepository {
   save(todo: Todo): Promise<void>;
+
+  update(todo: TodoPatch): Promise<void>;
 
   search(id: string): Promise<Todo | null>;
 
