@@ -1,10 +1,10 @@
 version: '3'
 services:
-  ts-api:
+  pecera-back:
     build:
       context: .
       dockerfile: Dockerfile
     image: pecera:1.0.0
-    container_name: pecera-api
+    container_name: pecera-back
     ports:
       - "3000:3000"

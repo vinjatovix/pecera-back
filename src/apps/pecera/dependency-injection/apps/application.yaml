@@ -1,0 +1,53 @@
+services:
+  pecera.MongoConfig:
+    factory:
+      class: ../../../../Contexts/shared/infrastructure/persistence/mongo/MongoConfigFactory
+      method: 'createConfig'
+
+  pecera.MongoClient:
+    factory:
+      class: ../../../../Contexts/shared/infrastructure/persistence/mongo/MongoClientFactory
+      method: 'createClient'
+    arguments: ['pecera', '@pecera.MongoConfig']
+
+  # HEALTH
+  Apps.pecera.controllers.health.GetStatusController:
+    class: ../../controllers/health/GetStatusController
+    arguments: []
+
+  # AUTH
+  Apps.pecera.controllers.Auth.LoginController:
+    class: ../../controllers/Auth/LoginController
+    arguments: ['@pecera.Auth.application.LoginUser']
+
+  Apps.pecera.controllers.Auth.RegisterController:
+    class: ../../controllers/Auth/RegisterController
+    arguments: ['@pecera.Auth.application.RegisterUser']
+
+  Apps.pecera.controllers.Auth.ValidateMailController:
+    class: ../../controllers/Auth/ValidateMailController
+    arguments: ['@pecera.Auth.application.ValidateMail']
+
+  Apps.pecera.controllers.Auth.RefreshTokenController:
+    class: ../../controllers/Auth/RefreshTokenController
+    arguments: ['@pecera.Auth.application.RefreshToken']
+  # TO-DOS
+  Apps.pecera.controllers.Todos.PostTodoController:
+    class: ../../controllers/Todos/PostTodoController
+    arguments: ['@pecera.Todos.application.TodoCreator']
+
+  Apps.pecera.controllers.Todos.GetTodoController:
+    class: ../../controllers/Todos/GetTodoController
+    arguments: ['@pecera.Todos.application.TodoFinder']
+
+  Apps.pecera.controllers.Todos.GetAllTodosController:
+    class: ../../controllers/Todos/GetAllTodosController
+    arguments: ['@pecera.Todos.application.AllTodosFinder']
+
+  Apps.pecera.controllers.Todos.PatchTodoController:
+    class: ../../controllers/Todos/PatchTodoController
+    arguments: ['@pecera.Todos.application.TodoPatcher']
+
+  Apps.pecera.controllers.Todos.DeleteTodoController:
+    class: ../../controllers/Todos/DeleteTodoController
+    arguments: ['@pecera.Todos.application.TodoRemover']

@@ -1,11 +1,52 @@
 {
   "name": "pecera-back",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">=20.9.0",
+    "npm": ">=10.1.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "docker:mongo": "docker-compose -f ./docker/docker-compose.yml up --build -d"
+    "build": "npm run build:clean && npm run build:tsc && npm run build:di",
+    "build:clean": "rm -r dist; exit 0",
+    "build:di": "find ./src -type f \\( -name '*.json' -o -name '*.yml' -o -name '*.yaml' -o -name '*.html' -o -name '*.png' -o -name '*.env' \\) -exec rsync --relative {} dist/ \\;",
+    "build:tsc": "tsc -p tsconfig.prod.json --sourceMap false",
+    "check-dependencies": "madge --circular ./src",
+    "dev": "ts-node-dev --ignore-watch node_modules ./src/apps/pecera/start.ts",
+    "docker:local": "npm run build && docker-compose build && docker-compose up",
+    "docker:mongo": "docker-compose -f ./docker/docker-compose.yml up --build -d",
+    "lint": "eslint . --ext .ts --max-warnings=0",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "start": "node ./dist/src/apps/pecera/start.js",
+    "start:local": "npm run build && node ./dist/src/apps/pecera/start.js",
+    "pre-commit": "lint-staged",
+    "restoreDB": "./docker/mongo/scripts/restoreDB.sh",
+    "restoreDump": "./docker/mongo/scripts/restoreDump.sh",
+    "test": "npm run build && npm run test:clean:coverage && npm run test:unit && npm run test:features && npm run test:merge:coverage",
+    "test:clean:coverage": "rm -rf coverage && rm -rf .nyc_output",
+    "test:features": "nyc --report-dir=coverage/cucumber --reporter=lcov cucumber-js -p pecera",
+    "test:unit": "nyc --report-dir=coverage/jest --reporter=lcov jest --detectOpenHandles --forceExit",
+    "test:unit:watch": "jest --watch --detectOpenHandles --forceExit",
+    "test:merge:coverage": "lcov-result-merger 'coverage/**/*.info' 'coverage/merged.info'"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commit-message-validator"
+    }
+  },
+  "lint-staged": {
+    "{src,tests}/**/*.ts": [
+      "prettier --write",
+      "npm run lint:fix"
+    ]
+  },
+  "config": {
+    "commit-message-validator": {
+      "pattern": "^\\[GH-[\\d]+\\]\\s.*$",
+      "errorMessage": "Invalid commit message. Valid example: [GH-123] feat(api): add new feature"
+    }
   },
   "author": "",
   "license": "ISC",
@@ -13,29 +54,64 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "env-var": "^7.5.0",
+    "errorhandler": "^1.5.1",
     "express": "^4.19.2",
     "express-promise-router": "^4.1.1",
     "express-validator": "^7.1.0",
+    "glob": "^10.4.1",
     "helmet": "^7.1.0",
     "http-status": "^1.7.4",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
+    "node-dependency-injection": "^2.7.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3",
+    "uuid": "^9.0.1",
+    "uuid-validate": "^0.0.3",
     "winston": "^3.13.1",
     "winston-mongodb": "^5.1.1"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^10.8.0",
     "@types/bcryptjs": "^2.4.6",
+    "@types/chai": "^4.3.16",
+    "@types/chance": "^1.1.6",
+    "@types/convict": "^6.1.6",
     "@types/cors": "^2.8.17",
+    "@types/errorhandler": "^1.5.3",
     "@types/express": "^4.17.21",
+    "@types/glob": "^8.1.0",
+    "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
-    "@typescript-eslint/eslint-plugin": "^7.16.1",
-    "@typescript-eslint/parser": "^7.16.1",
+    "@types/migrate-mongo": "^10.0.4",
+    "@types/minimatch": "^5.1.2",
+    "@types/supertest": "^2.0.16",
+    "@types/swagger-ui-express": "^4.1.6",
+    "@types/uuid-validate": "^0.0.3",
+    "@types/yamljs": "^0.2.34",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "chai": "^4.4.1",
+    "chance": "^1.1.11",
+    "commit-message-validator": "^1.0.2",
     "eslint": "^8.57.0",
-    "madge": "^7.0.0",
+    "husky": "^8.0.3",
+    "install": "^0.13.0",
+    "jest": "^29.7.0",
+    "jest-sonar-reporter": "^2.0.0",
+    "lcov-result-merger": "^5.0.1",
+    "lint-staged": "15.2.5",
+    "madge": "^6.1.0",
+    "minimatch": "^10.0.1",
+    "newman": "^6.1.2",
+    "npm": "^10.8.2",
+    "nyc": "^15.1.0",
+    "prettier": "^3.3.3",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.4",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0"
   }
