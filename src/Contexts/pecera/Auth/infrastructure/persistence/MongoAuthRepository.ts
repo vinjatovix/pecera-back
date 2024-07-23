@@ -71,6 +71,23 @@ export class MongoAuthRepository
       : null;
   }
 
+  async findByUsername(username: string): Promise<Nullable<User>> {
+    const collection = await this.collection();
+    const document = await collection.findOne<AuthDocument>({ username });
+
+    return document
+      ? User.fromPrimitives({
+          id: document._id,
+          email: document.email,
+          username: document.username,
+          password: document.password,
+          emailValidated: document.emailValidated,
+          roles: document.roles,
+          metadata: document.metadata
+        })
+      : null;
+  }
+
   private async createUniqueIndex(): Promise<void> {
     const collection = await this.collection();
     await collection.createIndex({ email: 1 }, { unique: true });
