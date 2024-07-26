@@ -22,7 +22,9 @@ export class CryptAdapterMock implements CryptAdapter {
     this.verifyTokenMock = token
       ? jest.fn().mockReturnValue({ email: EmailMother.random().value })
       : jest.fn().mockReturnValue(null);
-    this.refreshTokenMock = jest.fn().mockReturnValue(random.word());
+    this.refreshTokenMock = token
+      ? jest.fn().mockReturnValue(random.word())
+      : jest.fn().mockReturnValue(null);
   }
 
   hash(password: string): string {
