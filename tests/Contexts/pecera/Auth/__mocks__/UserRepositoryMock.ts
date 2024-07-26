@@ -17,10 +17,10 @@ export class UserRepositoryMock implements UserRepository {
   private updateMock: jest.Mock;
   private searchMock: jest.Mock;
   private findByIdMock: jest.Mock;
+  private findByUsernameMock: jest.Mock;
   private password: StringValueObject = new StringValueObject(
     '$2a$12$mZgfH4D7z4dZcZHDKyogqOOnEWS6XHLdczPJktzD88djpvlr3Bq1C'
   );
-  private findByUsernameMock: jest.Mock;
 
   constructor({ exists }: { exists: boolean }) {
     if (exists) {
@@ -85,7 +85,7 @@ export class UserRepositoryMock implements UserRepository {
     expect(this.searchMock).toHaveBeenCalledWith(expected);
   }
 
-  findByUsername(username: string): Promise<Nullable<User>> {
+  async findByUsername(username: string): Promise<Nullable<User>> {
     return this.findByUsernameMock(username);
   }
 

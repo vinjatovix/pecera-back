@@ -23,9 +23,13 @@ export class RegisterUser {
   }
 
   async run({ password, username, email }: RegisterUserRequest): Promise<void> {
-    const storedUser = await this.repository.search(email);
-    if (storedUser) {
+    const storedMail = await this.repository.search(email);
+    if (storedMail) {
       throw new InvalidArgumentError(`User <${email}> already exists`);
+    }
+    const storedUsername = await this.repository.findByUsername(username);
+    if (storedUsername) {
+      throw new InvalidArgumentError(`Username <${username}> already exists`);
     }
 
     UserPassword.ensureLength(password);
