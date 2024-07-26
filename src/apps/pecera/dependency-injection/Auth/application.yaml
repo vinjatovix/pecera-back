@@ -29,3 +29,7 @@ services:
   pecera.Auth.application.ValidateMail:
     class: ../../../../Contexts/pecera/Auth/application/ValidateMail
     arguments: ['@pecera.Auth.domain.AuthRepository', '@plugin.Encrypter']
+
+  pecera.Auth.application.RefreshToken:
+    class: ../../../../Contexts/pecera/Auth/application/RefreshToken
+    arguments: ['@plugin.Encrypter']

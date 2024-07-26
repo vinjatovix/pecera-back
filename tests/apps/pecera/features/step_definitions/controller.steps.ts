@@ -5,6 +5,7 @@ import request from 'supertest';
 import { Pecera } from '../../../../../src/apps/pecera/Pecera';
 import container from '../../../../../src/apps/pecera/dependency-injection';
 import { EnvironmentArranger } from '../../../../Contexts/shared/infrastructure/arranger/EnvironmentArranger';
+import { UserMother } from '../../../../Contexts/pecera/Auth/domain/mothers';
 
 const environmentArranger: Promise<EnvironmentArranger> = container.get(
   'pecera.EnvironmentArranger'
@@ -13,6 +14,7 @@ const environmentArranger: Promise<EnvironmentArranger> = container.get(
 let _request: request.Test;
 let _response: request.Response;
 let app: Pecera;
+let _jwt: string;
 
 const compareResponseObject = <T>(
   responseObj: T,
@@ -61,6 +63,31 @@ Given(
 
 Given('a GET request to {string}', (route: string) => {
   _request = request(app.httpServer).get(route);
+});
+
+Given('an authenticated GET request to {string}', (route: string) => {
+  _request = request(app.httpServer)
+    .get(route)
+    .set('Authorization', `Bearer ${_jwt}`);
+});
+
+Given("a registered user's auth token", async () => {
+  const { email, username, password } = UserMother.random();
+  await request(app.httpServer).post('/api/v1/Auth/register').send({
+    email: email.value,
+    username: username.value,
+    password: password.value,
+    repeatPassword: password.value
+  });
+
+  const response = await request(app.httpServer)
+    .post('/api/v1/Auth/login')
+    .send({
+      email: email.value,
+      password: password.value
+    });
+  _jwt = response.body.token;
+  assert.isNotEmpty(_jwt);
 });
 
 Then('the response status code should be {int}', async (status: number) => {
