@@ -1,3 +1,4 @@
+export * from './FriendsAdder';
 export * from './LoginUser';
 export * from './RefreshToken';
 export * from './RegisterUser';

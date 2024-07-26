@@ -4,6 +4,7 @@ import container from '../../dependency-injection';
 
 import { validateBody, validateReqSchema } from '../shared';
 import {
+  FriendsAdderController,
   LoginController,
   RefreshTokenController,
   RegisterController,
@@ -38,6 +39,10 @@ export const register = (router: Router) => {
 
   const userFinderController: UserFinderController = container.get(
     'Apps.pecera.controllers.Auth.UserFinderController'
+  );
+
+  const friendsAdderController: FriendsAdderController = container.get(
+    'Apps.pecera.controllers.Auth.FriendsAdderController'
   );
 
   router.post(
@@ -82,6 +87,14 @@ export const register = (router: Router) => {
     auth,
     (req: Request, res: Response, next: NextFunction) => {
       userFinderController.run(req, res, next);
+    }
+  );
+
+  router.post(
+    `${prefix}/friends`,
+    auth,
+    (req: Request, res: Response, next: NextFunction) => {
+      friendsAdderController.run(req, res, next);
     }
   );
 };

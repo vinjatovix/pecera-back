@@ -1,3 +1,4 @@
+export * from './FriendsAdderController';
 export * from './LoginController';
 export * from './RefreshTokenController';
 export * from './RegisterController';

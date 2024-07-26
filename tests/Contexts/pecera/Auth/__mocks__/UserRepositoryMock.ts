@@ -18,6 +18,7 @@ export class UserRepositoryMock implements UserRepository {
   private searchMock: jest.Mock;
   private findByIdMock: jest.Mock;
   private findByUsernameMock: jest.Mock;
+  private findUsersByIdsMock: jest.Mock;
   private password: StringValueObject = new StringValueObject(
     '$2a$12$mZgfH4D7z4dZcZHDKyogqOOnEWS6XHLdczPJktzD88djpvlr3Bq1C'
   );
@@ -44,10 +45,19 @@ export class UserRepositoryMock implements UserRepository {
           id: new Uuid(id)
         });
       });
+      this.findUsersByIdsMock = jest.fn().mockImplementation((ids: string[]) => {
+        return ids.map((id) => {
+          return UserMother.create({
+            id: new Uuid(id),
+            password: this.password
+          });
+        });
+      });
     } else {
       this.findByUsernameMock = jest.fn().mockReturnValue(null);
       this.searchMock = jest.fn().mockReturnValue(null);
       this.findByIdMock = jest.fn().mockReturnValue(null);
+      this.findUsersByIdsMock = jest.fn().mockReturnValue([]);
     }
     this.saveMock = jest.fn();
     this.updateMock = jest.fn();
@@ -91,5 +101,9 @@ export class UserRepositoryMock implements UserRepository {
 
   assertFindByUsernameHasBeenCalledWith(expected: string): void {
     expect(this.findByUsernameMock).toHaveBeenCalledWith(expected);
+  }
+
+  async findUsersByIds(ids: string[]): Promise<User[]> {
+    return this.findUsersByIdsMock(ids);
   }
 }

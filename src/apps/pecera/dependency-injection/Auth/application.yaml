@@ -18,6 +18,10 @@ services:
     class: ../../../../Contexts/shared/plugins/CryptAdapter
     arguments: []
 
+  pecera.Auth.application.FriendAdder:
+    class: ../../../../Contexts/pecera/Auth/application/FriendsAdder
+    arguments: ['@pecera.Auth.domain.AuthRepository']
+
   pecera.Auth.application.LoginUser:
     class: ../../../../Contexts/pecera/Auth/application/LoginUser
     arguments: ['@pecera.Auth.domain.AuthRepository', '@plugin.Encrypter']

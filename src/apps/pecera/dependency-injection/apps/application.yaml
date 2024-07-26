@@ -16,6 +16,10 @@ services:
     arguments: []
 
   # AUTH
+  Apps.pecera.controllers.Auth.FriendsAdderController:
+    class: ../../controllers/Auth/FriendsAdderController
+    arguments: ['@pecera.Auth.application.FriendAdder']
+
   Apps.pecera.controllers.Auth.LoginController:
     class: ../../controllers/Auth/LoginController
     arguments: ['@pecera.Auth.application.LoginUser']

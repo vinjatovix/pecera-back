@@ -60,6 +60,15 @@ export class MongoAuthRepository
       : null;
   }
 
+  async findUsersByIds(ids: string[]): Promise<User[]> {
+    const collection = await this.collection();
+    const documents = await collection
+      .find<AuthDocument>({ _id: { $in: ids as unknown as ObjectId[] } })
+      .toArray();
+
+    return documents.map(this.fromPrimitives);
+  }
+
   private fromPrimitives(document: AuthDocument): User {
     return User.fromPrimitives({
       id: document._id,
