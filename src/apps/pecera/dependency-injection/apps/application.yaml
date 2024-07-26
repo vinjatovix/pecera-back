@@ -35,3 +35,23 @@ services:
   Apps.pecera.controllers.Auth.RefreshTokenController:
     class: ../../controllers/Auth/RefreshTokenController
     arguments: ['@pecera.Auth.application.RefreshToken']
+  # TO-DOS
+  Apps.pecera.controllers.Todos.PostTodoController:
+    class: ../../controllers/Todos/PostTodoController
+    arguments: ['@pecera.Todos.application.TodoCreator']
+
+  Apps.pecera.controllers.Todos.GetTodoController:
+    class: ../../controllers/Todos/GetTodoController
+    arguments: ['@pecera.Todos.application.TodoFinder']
+
+  Apps.pecera.controllers.Todos.GetAllTodosController:
+    class: ../../controllers/Todos/GetAllTodosController
+    arguments: ['@pecera.Todos.application.AllTodosFinder']
+
+  Apps.pecera.controllers.Todos.PatchTodoController:
+    class: ../../controllers/Todos/PatchTodoController
+    arguments: ['@pecera.Todos.application.TodoPatcher']
+
+  Apps.pecera.controllers.Todos.DeleteTodoController:
+    class: ../../controllers/Todos/DeleteTodoController
+    arguments: ['@pecera.Todos.application.TodoRemover']
