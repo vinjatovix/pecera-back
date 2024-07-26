@@ -9,4 +9,6 @@ export interface UserRepository {
   update(user: UserPatch, username: Username): Promise<void>;
 
   search(email: string): Promise<Nullable<User>>;
+
+  findByUsername(username: string): Promise<Nullable<User>>;
 }
