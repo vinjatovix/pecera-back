@@ -11,4 +11,6 @@ export interface UserRepository {
   search(email: string): Promise<Nullable<User>>;
 
   findByUsername(username: string): Promise<Nullable<User>>;
+
+  findById(id: string): Promise<Nullable<User>>;
 }

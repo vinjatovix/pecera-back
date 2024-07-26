@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import { Nullable } from '../../../../shared/domain/Nullable';
 import { MongoRepository } from '../../../../shared/infrastructure/persistence/mongo/MongoRepository';
 import { User, UserRepository, Username } from '../../domain';
@@ -18,8 +18,7 @@ export interface AuthDocument {
 
 export class MongoAuthRepository
   extends MongoRepository<User | UserPatch>
-  implements UserRepository
-{
+  implements UserRepository {
   constructor(client: Promise<MongoClient>) {
     super(client);
     this.createUniqueIndex();
@@ -48,6 +47,17 @@ export class MongoAuthRepository
     const document = await collection.findOne<AuthDocument>({ username });
 
     return document ? this.fromPrimitives(document) : null;
+  }
+
+  async findById(id: string): Promise<Nullable<User>> {
+    const collection = await this.collection();
+    const document = await collection.findOne<AuthDocument>({
+      _id: id as unknown as ObjectId
+    });
+
+    return document
+      ? this.fromPrimitives(document)
+      : null;
   }
 
   private fromPrimitives(document: AuthDocument): User {
