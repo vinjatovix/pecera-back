@@ -40,13 +40,18 @@ export abstract class MongoRepository<T extends AggregateRoot> {
     );
   }
 
-  protected async patch(aggregateRoot: T): Promise<void> {
+  protected async patch(aggregateRoot: T, username?: Username): Promise<void> {
     const collection = await this.collection();
     const { id, ...document } = aggregateRoot.toPrimitives();
 
     await collection.updateOne(
       { _id: id as unknown as ObjectId },
-      { $set: document }
+      {
+        $set: {
+          ...document,
+          ...(username && this.updateMetadata(username))
+        }
+      }
     );
   }
 

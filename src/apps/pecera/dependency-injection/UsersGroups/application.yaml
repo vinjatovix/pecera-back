@@ -1,0 +1,39 @@
+services:
+  pecera.MongoConfig:
+    factory:
+      class: ../../../../Contexts/shared/infrastructure/persistence/mongo/MongoConfigFactory
+      method: 'createConfig'
+
+  pecera.MongoClient:
+    factory:
+      class: ../../../../Contexts/shared/infrastructure/persistence/mongo/MongoClientFactory
+      method: 'createClient'
+    arguments: ['pecera', '@pecera.MongoConfig']
+
+  pecera.UsersGroups.domain.UsersGroupsRepository:
+    class: ../../../../Contexts/pecera/UsersGroups/infrastructure/persistence/MongoUsersGroupsRepository
+    arguments: ['@pecera.MongoClient']
+
+  pecera.UsersGroups.application.UsersGroupsCreator:
+    class: ../../../../Contexts/pecera/UsersGroups/application/UsersGroupsCreator
+    arguments:
+      [
+        '@pecera.UsersGroups.domain.UsersGroupsRepository',
+        '@pecera.Auth.domain.AuthRepository'
+      ]
+
+  pecera.UsersGroups.application.UsersGroupsPatcher:
+    class: ../../../../Contexts/pecera/UsersGroups/application/UsersGroupsPatcher
+    arguments:
+      [
+        '@pecera.UsersGroups.domain.UsersGroupsRepository',
+        '@pecera.Auth.domain.AuthRepository'
+      ]
+
+  pecera.UsersGroups.application.AllUsersGroupsFinder:
+    class: ../../../../Contexts/pecera/UsersGroups/application/AllUsersGroupsFinder
+    arguments: ['@pecera.UsersGroups.domain.UsersGroupsRepository']
+
+  pecera.UsersGroups.application.UsersGroupsRemover:
+    class: ../../../../Contexts/pecera/UsersGroups/application/UsersGroupsRemover
+    arguments: ['@pecera.UsersGroups.domain.UsersGroupsRepository']

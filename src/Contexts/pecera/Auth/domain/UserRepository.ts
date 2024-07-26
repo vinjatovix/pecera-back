@@ -15,4 +15,6 @@ export interface UserRepository {
   findById(id: string): Promise<Nullable<User>>;
 
   findUsersByIds(ids: string[]): Promise<User[]>;
+
+  findNoValidatedUsersByIds(ids: string[]): Promise<User[]>;
 }

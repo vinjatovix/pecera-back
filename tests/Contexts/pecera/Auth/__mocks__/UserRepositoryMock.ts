@@ -19,16 +19,18 @@ export class UserRepositoryMock implements UserRepository {
   private findByIdMock: jest.Mock;
   private findByUsernameMock: jest.Mock;
   private findUsersByIdsMock: jest.Mock;
+  private findNoValidatedUsersByIdsMock: jest.Mock;
   private password: StringValueObject = new StringValueObject(
     '$2a$12$mZgfH4D7z4dZcZHDKyogqOOnEWS6XHLdczPJktzD88djpvlr3Bq1C'
   );
 
-  constructor({ exists }: { exists: boolean }) {
+  constructor({ exists, validated = true }: { exists: boolean, validated?: boolean }) {
     if (exists) {
       this.searchMock = jest.fn().mockImplementation((email: string) => {
         return UserMother.create({
           email: new Email(email),
-          password: this.password
+          password: this.password,
+          emailValidated: validated
         });
       });
       this.findByUsernameMock = jest
@@ -36,28 +38,39 @@ export class UserRepositoryMock implements UserRepository {
         .mockImplementation((username: string) => {
           return UserMother.create({
             username: new StringValueObject(username),
-            password: this.password
+            password: this.password,
+            emailValidated: validated
           });
         });
       this.findByIdMock = jest.fn().mockImplementation((id: string) => {
         return UserMother.create({
           password: this.password,
-          id: new Uuid(id)
+          id: new Uuid(id),
+          emailValidated: validated
         });
       });
       this.findUsersByIdsMock = jest.fn().mockImplementation((ids: string[]) => {
-        return ids.map((id) => {
-          return UserMother.create({
+        return ids.map((id) =>
+          UserMother.create({
+            password: this.password,
             id: new Uuid(id),
-            password: this.password
-          });
-        });
+            emailValidated: validated
+          }));
+      });
+      this.findNoValidatedUsersByIdsMock = jest.fn().mockImplementation((ids: string[]) => {
+        return ids.map((id) =>
+          UserMother.create({
+            password: this.password,
+            id: new Uuid(id),
+            emailValidated: validated
+          }));
       });
     } else {
       this.findByUsernameMock = jest.fn().mockReturnValue(null);
       this.searchMock = jest.fn().mockReturnValue(null);
       this.findByIdMock = jest.fn().mockReturnValue(null);
       this.findUsersByIdsMock = jest.fn().mockReturnValue([]);
+      this.findNoValidatedUsersByIdsMock = jest.fn().mockReturnValue([]);
     }
     this.saveMock = jest.fn();
     this.updateMock = jest.fn();
@@ -105,5 +118,17 @@ export class UserRepositoryMock implements UserRepository {
 
   async findUsersByIds(ids: string[]): Promise<User[]> {
     return this.findUsersByIdsMock(ids);
+  }
+
+  assertFindUsersByIdsHasBeenCalledWith(expected: string[]): void {
+    expect(this.findUsersByIdsMock).toHaveBeenCalledWith(expected);
+  }
+
+  async findNoValidatedUsersByIds(ids: string[]): Promise<User[]> {
+    return this.findNoValidatedUsersByIdsMock(ids);
+  }
+
+  assertFindNoValidatedUsersByIdsHasBeenCalledWith(expected: string[]): void {
+    expect(this.findNoValidatedUsersByIdsMock).toHaveBeenCalledWith(expected);
   }
 }

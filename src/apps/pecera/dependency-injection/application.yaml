@@ -2,3 +2,4 @@ imports:
   - { resource: ./apps/application.yaml }
   - { resource: ./Auth/application.yaml }
   - { resource: ./Todos/application.yaml }
+  - { resource: ./UsersGroups/application.yaml }

@@ -39,6 +39,7 @@ services:
   Apps.pecera.controllers.Auth.RefreshTokenController:
     class: ../../controllers/Auth/RefreshTokenController
     arguments: ['@pecera.Auth.application.RefreshToken']
+
   # TO-DOS
   Apps.pecera.controllers.Todos.PostTodoController:
     class: ../../controllers/Todos/PostTodoController
@@ -59,3 +60,20 @@ services:
   Apps.pecera.controllers.Todos.DeleteTodoController:
     class: ../../controllers/Todos/DeleteTodoController
     arguments: ['@pecera.Todos.application.TodoRemover']
+
+  # USERS GROUPS
+  Apps.pecera.controllers.UsersGroups.GetAllUsersGroupsByUserController:
+    class: ../../controllers/UsersGroups/GetAllUsersGroupsByUserController
+    arguments: ['@pecera.UsersGroups.application.AllUsersGroupsFinder']
+
+  Apps.pecera.controllers.UsersGroups.PostUsersGroupsController:
+    class: ../../controllers/UsersGroups/PostUsersGroupsController
+    arguments: ['@pecera.UsersGroups.application.UsersGroupsCreator']
+
+  Apps.pecera.controllers.UsersGroups.PatchUsersGroupsController:
+    class: ../../controllers/UsersGroups/PatchUsersGroupsController
+    arguments: ['@pecera.UsersGroups.application.UsersGroupsPatcher']
+
+  Apps.pecera.controllers.UsersGroups.DeleteUsersGroupsController:
+    class: ../../controllers/UsersGroups/DeleteUsersGroupsController
+    arguments: ['@pecera.UsersGroups.application.UsersGroupsRemover']

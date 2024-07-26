@@ -11,7 +11,7 @@ describe('ValidateMail', () => {
 
   beforeEach(() => {
     encrypter = new CryptAdapterMock({ token: true });
-    repository = new UserRepositoryMock({ exists: true });
+    repository = new UserRepositoryMock({ exists: true, validated: false });
     service = new ValidateMail(repository, encrypter);
   });
 
