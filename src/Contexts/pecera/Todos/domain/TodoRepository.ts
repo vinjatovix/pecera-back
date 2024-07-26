@@ -5,6 +5,8 @@ export interface TodoRepository {
 
   search(id: string): Promise<Todo | null>;
 
+  findByUserId(userId: string): Promise<Todo[]>;
+
   findAll(): Promise<Todo[]>;
 
   remove(id: string): Promise<void>;
