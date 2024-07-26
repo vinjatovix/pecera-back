@@ -28,7 +28,7 @@ const compareResponseObject = <T>(
             const typedSubKey = subKey as keyof typeof value;
             return (
               (responseObj[key as keyof T] as Record<string, unknown>)[
-                typedSubKey
+              typedSubKey
               ] === subValue
             );
           }
@@ -61,6 +61,16 @@ Given(
   }
 );
 
+Given(
+  'an authenticated POST request to {string} with body',
+  async (route: string, body: string) => {
+    _request = request(app.httpServer)
+      .post(route)
+      .send(JSON.parse(body))
+      .set('Authorization', `Bearer ${_jwt}`);
+  }
+);
+
 Given('a GET request to {string}', (route: string) => {
   _request = request(app.httpServer).get(route);
 });
@@ -68,6 +78,33 @@ Given('a GET request to {string}', (route: string) => {
 Given('an authenticated GET request to {string}', (route: string) => {
   _request = request(app.httpServer)
     .get(route)
+    .set('Authorization', `Bearer ${_jwt}`);
+});
+
+Given(
+  'a PATCH request to {string} with body',
+  async (route: string, body: string) => {
+    _request = request(app.httpServer).patch(route).send(JSON.parse(body));
+  }
+);
+
+Given(
+  'an authenticated PATCH request to {string} with body',
+  (route: string, body: string) => {
+    _request = request(app.httpServer)
+      .patch(route)
+      .send(JSON.parse(body))
+      .set('Authorization', `Bearer ${_jwt}`);
+  }
+);
+
+Given('a DELETE request to {string}', (route: string) => {
+  _request = request(app.httpServer).delete(route);
+});
+
+Given('an authenticated DELETE request to {string}', (route: string) => {
+  _request = request(app.httpServer)
+    .delete(route)
     .set('Authorization', `Bearer ${_jwt}`);
 });
 
@@ -113,6 +150,24 @@ Then('the response body should contain', async (docString: string) => {
 Then('the response body should include an auth token', async () => {
   assert.isNotEmpty(_response.body.token);
 });
+
+Then(
+  'the response body will be an array containing',
+  async (docString: string) => {
+    const response = await _request;
+    const expectedResponseBody = JSON.parse(docString);
+    assert.isArray(response.body);
+
+    const matches = response.body.some((item: unknown) =>
+      compareResponseObject(item, expectedResponseBody)
+    );
+
+    assert.isTrue(
+      matches,
+      'Expected the response body array to contain an object with the expected partial match'
+    );
+  }
+);
 
 Then('the response body should be empty', async () => {
   assert.isEmpty(_response.body);
