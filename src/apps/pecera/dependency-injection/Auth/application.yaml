@@ -33,3 +33,7 @@ services:
   pecera.Auth.application.RefreshToken:
     class: ../../../../Contexts/pecera/Auth/application/RefreshToken
     arguments: ['@plugin.Encrypter']
+
+  pecera.Auth.application.UserFinder:
+    class: ../../../../Contexts/pecera/Auth/application/UserFinder
+    arguments: ['@pecera.Auth.domain.AuthRepository']

@@ -24,6 +24,10 @@ services:
     class: ../../controllers/Auth/RegisterController
     arguments: ['@pecera.Auth.application.RegisterUser']
 
+  Apps.pecera.controllers.Auth.UserFinderController:
+    class: ../../controllers/Auth/UserFinderController
+    arguments: ['@pecera.Auth.application.UserFinder']
+
   Apps.pecera.controllers.Auth.ValidateMailController:
     class: ../../controllers/Auth/ValidateMailController
     arguments: ['@pecera.Auth.application.ValidateMail']

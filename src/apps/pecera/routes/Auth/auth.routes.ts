@@ -7,6 +7,7 @@ import {
   LoginController,
   RefreshTokenController,
   RegisterController,
+  UserFinderController,
   ValidateMailController
 } from '../../controllers/Auth';
 import {
@@ -33,6 +34,10 @@ export const register = (router: Router) => {
 
   const refreshTokenController: RefreshTokenController = container.get(
     'Apps.pecera.controllers.Auth.RefreshTokenController'
+  );
+
+  const userFinderController: UserFinderController = container.get(
+    'Apps.pecera.controllers.Auth.UserFinderController'
   );
 
   router.post(
@@ -69,6 +74,14 @@ export const register = (router: Router) => {
     auth,
     (req: Request, res: Response, next: NextFunction) => {
       refreshTokenController.run(req, res, next);
+    }
+  );
+
+  router.get(
+    `${prefix}/user/:username`,
+    auth,
+    (req: Request, res: Response, next: NextFunction) => {
+      userFinderController.run(req, res, next);
     }
   );
 };

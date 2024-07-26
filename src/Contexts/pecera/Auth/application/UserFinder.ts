@@ -1,12 +1,7 @@
 import { Nullable } from '../../../shared/domain';
 import { NotFoundError } from '../../../shared/domain/errors';
 import { UserRepository } from '../domain';
-import { UserResponse } from './interfaces';
-
-export interface RequestByUsername {
-  username: string;
-  appRoles: string[];
-}
+import { RequestByUsername, UserResponse } from './interfaces';
 
 export class UserFinder {
   private readonly repository: UserRepository;
