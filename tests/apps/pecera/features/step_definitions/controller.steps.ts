@@ -1,5 +1,5 @@
 import { AfterAll, BeforeAll, Given, Then } from '@cucumber/cucumber';
-import chai, { assert } from 'chai';
+import { assert } from 'chai';
 import request from 'supertest';
 
 import { Pecera } from '../../../../../src/apps/pecera/Pecera';
@@ -10,8 +10,8 @@ const environmentArranger: Promise<EnvironmentArranger> = container.get(
   'pecera.EnvironmentArranger'
 );
 
-const expect = chai.expect;
 let _request: request.Test;
+let _response: request.Response;
 let app: Pecera;
 
 const compareResponseObject = <T>(
@@ -52,13 +52,23 @@ AfterAll(async () => {
   await app.stop();
 });
 
+Given(
+  'a POST request to {string} with body',
+  async (route: string, body: string) => {
+    _request = request(app.httpServer).post(route).send(JSON.parse(body));
+  }
+);
+
 Given('a GET request to {string}', (route: string) => {
   _request = request(app.httpServer).get(route);
 });
 
 Then('the response status code should be {int}', async (status: number) => {
-  const response = await _request;
-  expect(response.status).to.be.equal(status);
+  _response = await _request.expect(status);
+});
+
+Then('the response body should be', async (docString: string) => {
+  assert.deepStrictEqual(_response.body, JSON.parse(docString));
 });
 
 Then('the response body should contain', async (docString: string) => {
@@ -71,4 +81,12 @@ Then('the response body should contain', async (docString: string) => {
     matches,
     'Expected response body to match the expected response body'
   );
+});
+
+Then('the response body should include an auth token', async () => {
+  assert.isNotEmpty(_response.body.token);
+});
+
+Then('the response body should be empty', async () => {
+  assert.isEmpty(_response.body);
 });

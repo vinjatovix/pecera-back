@@ -1,0 +1,31 @@
+services:
+  pecera.MongoConfig:
+    factory:
+      class: ../../../../Contexts/shared/infrastructure/persistence/mongo/MongoConfigFactory
+      method: 'createConfig'
+
+  pecera.MongoClient:
+    factory:
+      class: ../../../../Contexts/shared/infrastructure/persistence/mongo/MongoClientFactory
+      method: 'createClient'
+    arguments: ['pecera', '@pecera.MongoConfig']
+
+  pecera.Auth.domain.AuthRepository:
+    class: ../../../../Contexts/pecera/Auth/infrastructure/persistence/MongoAuthRepository
+    arguments: ['@pecera.MongoClient']
+
+  plugin.Encrypter:
+    class: ../../../../Contexts/shared/plugins/CryptAdapter
+    arguments: []
+
+  pecera.Auth.application.LoginUser:
+    class: ../../../../Contexts/pecera/Auth/application/LoginUser
+    arguments: ['@pecera.Auth.domain.AuthRepository', '@plugin.Encrypter']
+
+  pecera.Auth.application.RegisterUser:
+    class: ../../../../Contexts/pecera/Auth/application/RegisterUser
+    arguments: ['@pecera.Auth.domain.AuthRepository', '@plugin.Encrypter']
+
+  pecera.Auth.application.ValidateMail:
+    class: ../../../../Contexts/pecera/Auth/application/ValidateMail
+    arguments: ['@pecera.Auth.domain.AuthRepository', '@plugin.Encrypter']
