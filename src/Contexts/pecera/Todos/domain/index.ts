@@ -6,3 +6,4 @@ export * from './TodoPrice';
 export * from './TodoRank';
 export * from './TodoRepository';
 export * from './TodoTitle';
+export * from './TodoPatch';
