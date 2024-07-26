@@ -19,50 +19,47 @@ import { TodoTitleMother } from './TodoTitleMother';
 
 export class TodoMother {
   static create(
-    id: Uuid,
-    title: TodoTitle,
-    category: TodoCategory,
-    description: TodoDescription,
-    duration: TodoDuration,
-    price: TodoPrice,
-    rank: TodoRank,
-    user: Uuid
-  ) {
+    data: Partial<{
+      id: Uuid;
+      title: TodoTitle;
+      category: TodoCategory;
+      description: TodoDescription;
+      duration: TodoDuration;
+      price: TodoPrice;
+      rank: TodoRank;
+      user: Uuid;
+    }> = {}
+  ): Todo {
     return new Todo({
-      id,
-      title,
-      category,
-      description,
-      duration,
-      price,
-      rank,
-      user
+      id: data.id ?? UuidMother.random(),
+      title: data.title ?? TodoTitleMother.random(),
+      category: data.category ?? TodoCategoryMother.random(),
+      description: data.description ?? TodoDescriptionMother.random(),
+      duration: data.duration ?? TodoDurationMother.random(),
+      price: data.price ?? TodoPriceMother.random(),
+      rank: data.rank ?? TodoRankMother.random(),
+      user: data.user ?? UuidMother.random()
     });
   }
 
   static from(command: TodoCreatorRequest): Todo {
-    return this.create(
-      UuidMother.create(command.id),
-      TodoTitleMother.create(command.title),
-      TodoCategoryMother.create(command.category),
-      TodoDescriptionMother.create(command.description),
-      TodoDurationMother.create(command.duration),
-      TodoPriceMother.create(command.price),
-      TodoRankMother.create(command.rank),
-      UuidMother.create(command.user)
-    );
+    return this.create({
+      id: UuidMother.create(command.id),
+      title: TodoTitleMother.create(command.title),
+      category: TodoCategoryMother.create(command.category),
+      description: TodoDescriptionMother.create(command.description),
+      duration: TodoDurationMother.create(command.duration),
+      price: TodoPriceMother.create(command.price),
+      rank: TodoRankMother.create(command.rank),
+      user: UuidMother.create(command.user)
+    });
   }
 
   static random(): Todo {
-    return this.create(
-      UuidMother.random(),
-      TodoTitleMother.random(),
-      TodoCategoryMother.random(),
-      TodoDescriptionMother.random(),
-      TodoDurationMother.random(),
-      TodoPriceMother.random(),
-      TodoRankMother.random(),
-      UuidMother.random()
-    );
+    return this.create();
+  }
+
+  static randomList(length: number): Todo[] {
+    return Array.from({ length }, () => this.random());
   }
 }
